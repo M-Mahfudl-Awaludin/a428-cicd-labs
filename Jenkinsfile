@@ -1,27 +1,23 @@
 node {
     stage('Checkout') {
-        git branch: 'react-app',
-            url: 'https://github.com/M-Mahfudl-Awaludin/a428-cicd-labs.git'
+        checkout scm
     }
 
     stage('Install Dependencies') {
-        dir('react-app') {
+        docker.image('node:20').inside {
             sh 'npm install'
         }
     }
 
     stage('Build') {
-        dir('react-app') {
+        docker.image('node:20').inside {
             sh 'npm run build'
         }
     }
 
-    stage('Deploy') {
-        dir('react-app') {
-            sh '''
-            npm install -g serve
-            serve -s build -l 3000 &
-            '''
+    stage('Test') {
+        docker.image('node:20').inside {
+            sh 'npm test -- --watchAll=false'
         }
     }
 }
