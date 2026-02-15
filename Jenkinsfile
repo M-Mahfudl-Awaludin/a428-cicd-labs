@@ -1,5 +1,8 @@
 node {
 
+    def nodeHome = tool name: 'node18', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    env.PATH = "${nodeHome}/bin:${env.PATH}"
+
     stage('Checkout') {
         checkout scm
     }
@@ -15,5 +18,4 @@ node {
     stage('Test') {
         sh 'npm test -- --watchAll=false'
     }
-
 }
